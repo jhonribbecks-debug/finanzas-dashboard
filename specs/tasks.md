@@ -4,7 +4,7 @@
 
 ## Fase 0 — Andamiaje
 - [x] T-01 Inicializar monorepo con workspaces (`client`, `server`), Git, ESLint, `.gitignore`.
-- [ ] T-02 Crear proyecto Vite en `client/` con página base y router por hash.
+- [x] T-02 Crear proyecto Vite en `client/` con página base y router por hash.
 - [ ] T-03 Bootstrap Express en `server/` con middleware de errores y respuesta uniforme.
 - [ ] T-04 Conexión SQLite (`better-sqlite3`), `PRAGMA foreign_keys=ON`, script de migración con las 4 tablas, seed de categorías.
 
