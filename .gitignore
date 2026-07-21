@@ -1,0 +1,38 @@
+# Dependencias
+node_modules/
+
+# Build / Salidas
+dist/
+dist-ssr/
+*.local
+
+# SQLite / Bases de datos locales
+*.db
+*.sqlite
+*.sqlite3
+server/src/db/*.db
+server/src/db/*.sqlite
+server/src/db/*.sqlite3
+
+# Pruebas / Cobertura
+coverage/
+.nyc_output/
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+eslint.log
+
+# IDEs / Editores
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# Sistema operativo
+.DS_Store
+Thumbs.db
