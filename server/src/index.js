@@ -1,5 +1,8 @@
 import express from 'express';
 import cors from 'cors';
+import categoryRoutes from './routes/category.routes.js';
+import accountRoutes from './routes/account.routes.js';
+import movementRoutes from './routes/movement.routes.js';
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -17,6 +20,10 @@ const sendResponse = (res, { ok, data = null, error = null }, statusCode = 200) 
 app.get('/api/v1/health', (req, res) => {
   sendResponse(res, { ok: true });
 });
+
+app.use('/api/v1/categories', categoryRoutes);
+app.use('/api/v1/accounts', accountRoutes);
+app.use('/api/v1/movements', movementRoutes);
 
 app.use((err, req, res, next) => {
   console.error(err);
