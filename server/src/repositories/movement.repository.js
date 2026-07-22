@@ -1,6 +1,8 @@
-import { db } from '../db/database.js';
-
 class MovementRepository {
+  constructor() {
+    this.db = null;
+  }
+
   getAll(filters = {}, pagination = {}) {
     const { from, to, categoryId, accountId, kind, q } = filters;
     const { page = 1, limit = 10 } = pagination;
@@ -29,7 +31,7 @@ class MovementRepository {
       LIMIT ? OFFSET ?
     `;
 
-    return db.prepare(query).all(...params, limit, offset);
+    return this.db.prepare(query).all(...params, limit, offset);
   }
 
   count(filters = {}) {
@@ -47,11 +49,11 @@ class MovementRepository {
 
     const whereClause = conditions.length > 0 ? `WHERE ${conditions.join(' AND ')}` : '';
 
-    return db.prepare(`SELECT COUNT(*) as total FROM movements ${whereClause}`).get(...params).total;
+    return this.db.prepare(`SELECT COUNT(*) as total FROM movements ${whereClause}`).get(...params).total;
   }
 
   getById(id) {
-    return db.prepare(`
+    return this.db.prepare(`
       SELECT m.*, c.name as category_name, c.color as category_color, c.icon as category_icon,
              a.name as account_name
       FROM movements m
@@ -63,24 +65,24 @@ class MovementRepository {
 
   create(data) {
     const { id, kind, amount, date, description, category_id, account_id } = data;
-    return db.prepare(
+    return this.db.prepare(
       'INSERT INTO movements (id, kind, amount, date, description, category_id, account_id) VALUES (?, ?, ?, ?, ?, ?, ?)'
     ).run(id, kind, amount, date, description, category_id, account_id);
   }
 
   update(id, data) {
     const { kind, amount, date, description, category_id, account_id } = data;
-    return db.prepare(
+    return this.db.prepare(
       'UPDATE movements SET kind = ?, amount = ?, date = ?, description = ?, category_id = ?, account_id = ? WHERE id = ?'
     ).run(kind, amount, date, description, category_id, account_id, id);
   }
 
   delete(id) {
-    return db.prepare('DELETE FROM movements WHERE id = ?').run(id);
+    return this.db.prepare('DELETE FROM movements WHERE id = ?').run(id);
   }
 
   exists(id) {
-    return !!db.prepare('SELECT 1 FROM movements WHERE id = ?').get(id);
+    return !!this.db.prepare('SELECT 1 FROM movements WHERE id = ?').get(id);
   }
 }
 

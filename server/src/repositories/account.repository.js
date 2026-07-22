@@ -1,8 +1,12 @@
-import { db } from '../db/database.js';
+import { db as defaultDb } from '../db/database.js';
 
 class AccountRepository {
+  constructor(db = defaultDb) {
+    this.db = db;
+  }
+
   getAll() {
-    return db.prepare(`
+    return this.db.prepare(`
       SELECT a.*,
         a.initial_balance + COALESCE(SUM(CASE WHEN m.kind = 'ingreso' THEN m.amount ELSE -m.amount END), 0) as balance
       FROM accounts a
@@ -13,7 +17,7 @@ class AccountRepository {
   }
 
   getById(id) {
-    return db.prepare(`
+    return this.db.prepare(`
       SELECT a.*,
         a.initial_balance + COALESCE(SUM(CASE WHEN m.kind = 'ingreso' THEN m.amount ELSE -m.amount END), 0) as balance
       FROM accounts a
@@ -25,24 +29,24 @@ class AccountRepository {
 
   create(data) {
     const { id, name, type, initial_balance } = data;
-    return db.prepare(
+    return this.db.prepare(
       'INSERT INTO accounts (id, name, type, initial_balance) VALUES (?, ?, ?, ?)'
     ).run(id, name, type, initial_balance);
   }
 
   update(id, data) {
     const { name, type, initial_balance } = data;
-    return db.prepare(
+    return this.db.prepare(
       'UPDATE accounts SET name = ?, type = ?, initial_balance = ? WHERE id = ?'
     ).run(name, type, initial_balance, id);
   }
 
   delete(id) {
-    return db.prepare('DELETE FROM accounts WHERE id = ?').run(id);
+    return this.db.prepare('DELETE FROM accounts WHERE id = ?').run(id);
   }
 
   exists(id) {
-    return !!db.prepare('SELECT 1 FROM accounts WHERE id = ?').get(id);
+    return !!this.db.prepare('SELECT 1 FROM accounts WHERE id = ?').get(id);
   }
 
   hasName(name, excludeId = null) {
@@ -50,11 +54,11 @@ class AccountRepository {
       ? 'SELECT 1 FROM accounts WHERE name = ? AND id != ?'
       : 'SELECT 1 FROM accounts WHERE name = ?';
     const params = excludeId ? [name, excludeId] : [name];
-    return !!db.prepare(query).get(...params);
+    return !!this.db.prepare(query).get(...params);
   }
 
   hasMovements(id) {
-    return !!db.prepare('SELECT 1 FROM movements WHERE account_id = ?').get(id);
+    return !!this.db.prepare('SELECT 1 FROM movements WHERE account_id = ?').get(id);
   }
 }
 
