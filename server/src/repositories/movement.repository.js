@@ -1,6 +1,8 @@
+import { db as defaultDb } from '../db/database.js';
+
 class MovementRepository {
-  constructor() {
-    this.db = null;
+  constructor(db = defaultDb) {
+    this.db = db;
   }
 
   getAll(filters = {}, pagination = {}) {
