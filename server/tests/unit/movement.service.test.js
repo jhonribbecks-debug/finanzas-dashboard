@@ -1,24 +1,31 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import movementService from '../services/movement.service.js';
+import movementService from '../../src/services/movement.service.js';
+
+const mockRepo = {
+  getAll: vi.fn(),
+  count: vi.fn(),
+  getById: vi.fn(),
+  create: vi.fn(),
+  update: vi.fn(),
+  delete: vi.fn(),
+  exists: vi.fn(),
+};
+const mockCatRepo = { exists: vi.fn() };
+const mockAccRepo = { exists: vi.fn() };
+
+vi.mock('../../src/repositories/movement.repository.js', () => ({
+  default: mockRepo,
+}));
+vi.mock('../../src/repositories/category.repository.js', () => ({
+  default: mockCatRepo,
+}));
+vi.mock('../../src/repositories/account.repository.js', () => ({
+  default: mockAccRepo,
+}));
 
 describe('MovementService', () => {
-  const mockRepo = {
-    getAll: vi.fn(),
-    count: vi.fn(),
-    getById: vi.fn(),
-    create: vi.fn(),
-    update: vi.fn(),
-    delete: vi.fn(),
-    exists: vi.fn(),
-  };
-  const mockCatRepo = { exists: vi.fn() };
-  const mockAccRepo = { exists: vi.fn() };
-
   beforeEach(() => {
     vi.clearAllMocks();
-    movementService.repository = mockRepo;
-    movementService.categoryRepository = mockCatRepo;
-    movementService.accountRepository = mockAccRepo;
   });
 
   describe('getAll', () => {

@@ -2,13 +2,13 @@ import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 import request from 'supertest';
 import express from 'express';
 import { createTestDb } from '../helpers/testDb.js';
-import categoryRoutes from '../../routes/category.routes.js';
-import accountRoutes from '../../routes/account.routes.js';
-import movementRoutes from '../../routes/movement.routes.js';
-import { sendResponse } from '../../utils/response.js';
-import categoryRepository from '../../repositories/category.repository.js';
-import accountRepository from '../../repositories/account.repository.js';
-import movementRepository from '../../repositories/movement.repository.js';
+import categoryRoutes from '../../src/routes/category.routes.js';
+import accountRoutes from '../../src/routes/account.routes.js';
+import movementRoutes from '../../src/routes/movement.routes.js';
+import { sendResponse } from '../../src/utils/response.js';
+import categoryRepository from '../../src/repositories/category.repository.js';
+import accountRepository from '../../src/repositories/account.repository.js';
+import movementRepository from '../../src/repositories/movement.repository.js';
 import { v4 as uuidv4 } from 'uuid';
 
 const createApp = (db) => {

@@ -1,22 +1,25 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import categoryService from '../services/category.service.js';
+import categoryService from '../../src/services/category.service.js';
+
+const mockRepo = {
+  getAll: vi.fn(),
+  getById: vi.fn(),
+  create: vi.fn(),
+  update: vi.fn(),
+  delete: vi.fn(),
+  hasName: vi.fn(),
+  hasMovements: vi.fn(),
+  reassignMovements: vi.fn(),
+  exists: vi.fn(),
+};
+
+vi.mock('../../src/repositories/category.repository.js', () => ({
+  default: mockRepo,
+}));
 
 describe('CategoryService', () => {
-  const mockRepo = {
-    getAll: vi.fn(),
-    getById: vi.fn(),
-    create: vi.fn(),
-    update: vi.fn(),
-    delete: vi.fn(),
-    hasName: vi.fn(),
-    hasMovements: vi.fn(),
-    reassignMovements: vi.fn(),
-    exists: vi.fn(),
-  };
-
   beforeEach(() => {
     vi.clearAllMocks();
-    categoryService.repository = mockRepo;
   });
 
   describe('getAll', () => {
