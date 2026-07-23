@@ -1,6 +1,7 @@
 import { http } from '../api/http.js';
 import { store } from '../utils/store.js';
 import { formatCurrency, formatDate } from '../utils/formatters.js';
+import { exportToExcel } from '../utils/exporters.js';
 import Swal from 'sweetalert2';
 import Toastify from 'toastify-js';
 
@@ -56,6 +57,33 @@ async function loadAccounts() {
     renderFilters();
   } catch (err) {
     toast(err.message, 'error');
+  }
+}
+
+async function fetchAllMovements() {
+  const filters = store.get('filters') || {};
+  const params = new URLSearchParams();
+  Object.entries(filters).forEach(([k, v]) => {
+    if (v) params.append(k, v);
+  });
+  params.append('page', 1);
+  params.append('limit', 10000);
+
+  try {
+    const data = await http.get(`/movements?${params}`);
+    return data.items;
+  } catch (err) {
+    toast(err.message, 'error');
+    return [];
+  }
+}
+
+async function exportExcel() {
+  const movements = await fetchAllMovements();
+  if (movements.length > 0) {
+    exportToExcel(movements);
+  } else {
+    toast('No hay movimientos para exportar', 'info');
   }
 }
 
@@ -353,6 +381,9 @@ function initMovementsPage() {
 
   const addBtn = document.getElementById('btn-add-movement');
   if (addBtn) addBtn.addEventListener('click', addMovement);
+
+  const exportBtn = document.getElementById('btn-export-excel');
+  if (exportBtn) exportBtn.addEventListener('click', exportExcel);
 }
 
 export function MovementsPage() {
@@ -360,7 +391,10 @@ export function MovementsPage() {
     <section class="movements-page">
       <div class="page-header">
         <h1>Movimientos</h1>
-        <button id="btn-add-movement" class="btn btn-primary">Nuevo movimiento</button>
+        <div>
+          <button id="btn-export-excel" class="btn btn-secondary">Exportar Excel</button>
+          <button id="btn-add-movement" class="btn btn-primary">Nuevo movimiento</button>
+        </div>
       </div>
 
       <div id="movements-filters" class="filters-section"></div>
