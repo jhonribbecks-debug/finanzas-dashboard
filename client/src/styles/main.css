@@ -334,3 +334,42 @@ main {
         grid-template-columns: 1fr;
     }
 }
+
+/* Budgets page */
+.budgets-page {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.month-selector {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+}
+
+.month-selector label {
+    font-weight: 500;
+}
+
+.month-selector input {
+    padding: 0.5rem;
+    border: 1px solid #d1d5db;
+    border-radius: 4px;
+    font-size: 0.875rem;
+}
+
+.progress-container {
+    width: 100%;
+    height: 20px;
+    background-color: #e5e7eb;
+    border-radius: 9999px;
+    overflow: hidden;
+}
+
+.progress-bar {
+    height: 100%;
+    border-radius: 9999px;
+    transition: width 0.3s;
+}
