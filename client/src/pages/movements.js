@@ -1,7 +1,7 @@
 import { http } from '../api/http.js';
 import { store } from '../utils/store.js';
 import { formatCurrency, formatDate } from '../utils/formatters.js';
-import { exportToExcel } from '../utils/exporters.js';
+import { exportToExcel, exportToPdf } from '../utils/exporters.js';
 import Swal from 'sweetalert2';
 import Toastify from 'toastify-js';
 
@@ -82,6 +82,15 @@ async function exportExcel() {
   const movements = await fetchAllMovements();
   if (movements.length > 0) {
     exportToExcel(movements);
+  } else {
+    toast('No hay movimientos para exportar', 'info');
+  }
+}
+
+async function exportPdf() {
+  const movements = await fetchAllMovements();
+  if (movements.length > 0) {
+    exportToPdf(movements);
   } else {
     toast('No hay movimientos para exportar', 'info');
   }
@@ -384,6 +393,9 @@ function initMovementsPage() {
 
   const exportBtn = document.getElementById('btn-export-excel');
   if (exportBtn) exportBtn.addEventListener('click', exportExcel);
+
+  const exportPdfBtn = document.getElementById('btn-export-pdf');
+  if (exportPdfBtn) exportPdfBtn.addEventListener('click', exportPdf);
 }
 
 export function MovementsPage() {
@@ -393,6 +405,7 @@ export function MovementsPage() {
         <h1>Movimientos</h1>
         <div>
           <button id="btn-export-excel" class="btn btn-secondary">Exportar Excel</button>
+          <button id="btn-export-pdf" class="btn btn-secondary">Exportar PDF</button>
           <button id="btn-add-movement" class="btn btn-primary">Nuevo movimiento</button>
         </div>
       </div>
