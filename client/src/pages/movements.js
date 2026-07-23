@@ -194,14 +194,14 @@ function getFormData() {
 }
 
 async function addMovement() {
-  const { isConfirmButtonClicked, value } = await Swal.fire({
+  const { isConfirmed, value } = await Swal.fire({
     title: 'Nuevo movimiento',
     html: buildFormHtml(),
     showCancelButton: true,
     confirmButtonText: 'Guardar',
     cancelButtonText: 'Cancelar',
     customClass: { popup: 'swal-wide' },
-    preSubmit: () => {
+    preConfirm: () => {
       const data = getFormData();
       if (!data.date || !data.category_id || !data.account_id || !data.kind || !data.amount || data.amount <= 0) {
         Swal.showValidationMessage('Completa todos los campos correctamente');
@@ -211,7 +211,7 @@ async function addMovement() {
     },
   });
 
-  if (isConfirmButtonClicked && value) {
+  if (isConfirmed && value) {
     try {
       await http.post('/movements', value);
       toast('Movimiento creado', 'success');
@@ -226,14 +226,14 @@ async function editMovement(id) {
   const movement = store.get('movements').items.find((m) => m.id === id);
   if (!movement) return;
 
-  const { isConfirmButtonClicked, value } = await Swal.fire({
+  const { isConfirmed, value } = await Swal.fire({
     title: 'Editar movimiento',
     html: buildFormHtml(movement),
     showCancelButton: true,
     confirmButtonText: 'Guardar',
     cancelButtonText: 'Cancelar',
     customClass: { popup: 'swal-wide' },
-    preSubmit: () => {
+    preConfirm: () => {
       const data = getFormData();
       if (!data.date || !data.category_id || !data.account_id || !data.kind || !data.amount || data.amount <= 0) {
         Swal.showValidationMessage('Completa todos los campos correctamente');
@@ -243,7 +243,7 @@ async function editMovement(id) {
     },
   });
 
-  if (isConfirmButtonClicked && value) {
+  if (isConfirmed && value) {
     try {
       await http.put(`/movements/${id}`, value);
       toast('Movimiento actualizado', 'success');
@@ -255,7 +255,7 @@ async function editMovement(id) {
 }
 
 async function deleteMovement(id) {
-  const { isConfirmButtonClicked } = await Swal.fire({
+  const { isConfirmed } = await Swal.fire({
     title: '¿Estás seguro?',
     text: 'Esta acción no se puede deshacer',
     icon: 'warning',
@@ -264,7 +264,7 @@ async function deleteMovement(id) {
     cancelButtonText: 'Cancelar',
   });
 
-  if (isConfirmButtonClicked) {
+  if (isConfirmed) {
     try {
       await http.delete(`/movements/${id}`);
       toast('Movimiento eliminado', 'success');
