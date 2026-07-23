@@ -5,10 +5,12 @@ import { createTestDb } from '../helpers/testDb.js';
 import categoryRoutes from '../../src/routes/category.routes.js';
 import accountRoutes from '../../src/routes/account.routes.js';
 import movementRoutes from '../../src/routes/movement.routes.js';
+import dashboardRoutes from '../../src/routes/dashboard.routes.js';
 import { sendResponse } from '../../src/utils/response.js';
 import categoryRepository from '../../src/repositories/category.repository.js';
 import accountRepository from '../../src/repositories/account.repository.js';
 import movementRepository from '../../src/repositories/movement.repository.js';
+import dashboardRepository from '../../src/repositories/dashboard.repository.js';
 import { v4 as uuidv4 } from 'uuid';
 
 const createApp = (db) => {
@@ -18,11 +20,13 @@ const createApp = (db) => {
   categoryRepository.db = db;
   accountRepository.db = db;
   movementRepository.db = db;
+  dashboardRepository.db = db;
 
   app.get('/api/v1/health', (req, res) => sendResponse(res, { ok: true }));
   app.use('/api/v1/categories', categoryRoutes);
   app.use('/api/v1/accounts', accountRoutes);
   app.use('/api/v1/movements', movementRoutes);
+  app.use('/api/v1/dashboard', dashboardRoutes);
 
   app.use((err, req, res, next) => {
     sendResponse(res, {
@@ -328,5 +332,79 @@ describe('Integration: Movements API', () => {
     await request(app).delete(`/api/v1/movements/${movId}`).expect(200);
     const count = db.prepare('SELECT COUNT(*) as c FROM movements').get().c;
     expect(count).toBe(0);
+  });
+});
+
+describe('Integration: Dashboard API', () => {
+  let db, app, catGastoId, catIngresoId, accId;
+
+  beforeEach(() => {
+    db = createTestDb();
+    app = createApp(db);
+
+    catGastoId = uuidv4();
+    db.prepare('INSERT INTO categories (id, name, kind, color, icon) VALUES (?, ?, ?, ?, ?)')
+      .run(catGastoId, 'Food', 'gasto', '#ff0000', '🍔');
+
+    catIngresoId = uuidv4();
+    db.prepare('INSERT INTO categories (id, name, kind, color, icon) VALUES (?, ?, ?, ?, ?)')
+      .run(catIngresoId, 'Salary', 'ingreso', '#00ff00', '💰');
+
+    accId = uuidv4();
+    db.prepare('INSERT INTO accounts (id, name, type, initial_balance) VALUES (?, ?, ?, ?)')
+      .run(accId, 'Cash', 'efectivo', 1000);
+
+    const now = new Date();
+    const currentMonth = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
+
+    db.prepare('INSERT INTO movements (id, kind, amount, date, category_id, account_id) VALUES (?, ?, ?, ?, ?, ?)')
+      .run(uuidv4(), 'ingreso', 5000, `${currentMonth}-10`, catIngresoId, accId);
+    db.prepare('INSERT INTO movements (id, kind, amount, date, category_id, account_id) VALUES (?, ?, ?, ?, ?, ?)')
+      .run(uuidv4(), 'gasto', 1500, `${currentMonth}-12`, catGastoId, accId);
+    db.prepare('INSERT INTO movements (id, kind, amount, date, category_id, account_id) VALUES (?, ?, ?, ?, ?, ?)')
+      .run(uuidv4(), 'gasto', 800, `${currentMonth}-15`, catGastoId, accId);
+  });
+
+  afterEach(() => db.close());
+
+  it('GET /dashboard/summary returns monthly totals', async () => {
+    const res = await request(app).get('/api/v1/dashboard/summary').expect(200);
+    expect(res.body.data.monthly.income).toBe(5000);
+    expect(res.body.data.monthly.expenses).toBe(2300);
+    expect(res.body.data.monthly.balance).toBe(2700);
+  });
+
+  it('GET /dashboard/summary returns consolidated balance', async () => {
+    const res = await request(app).get('/api/v1/dashboard/summary').expect(200);
+    expect(res.body.data.consolidatedBalance).toBe(3700);
+  });
+
+  it('GET /dashboard/summary returns expenses by category', async () => {
+    const res = await request(app).get('/api/v1/dashboard/summary').expect(200);
+    expect(res.body.data.expensesByCategory).toHaveLength(1);
+    expect(res.body.data.expensesByCategory[0].name).toBe('Food');
+    expect(res.body.data.expensesByCategory[0].color).toBe('#ff0000');
+    expect(res.body.data.expensesByCategory[0].total).toBe(2300);
+  });
+
+  it('GET /dashboard/summary returns monthly evolution with 6 months', async () => {
+    const res = await request(app).get('/api/v1/dashboard/summary').expect(200);
+    expect(res.body.data.monthlyEvolution).toHaveLength(6);
+    const currentMonth = res.body.data.monthlyEvolution.find(
+      (m) => m.income > 0 || m.expenses > 0
+    );
+    expect(currentMonth).toBeDefined();
+    expect(currentMonth.income).toBe(5000);
+    expect(currentMonth.expenses).toBe(2300);
+  });
+
+  it('GET /dashboard/summary returns zeros when no movements', async () => {
+    db.prepare('DELETE FROM movements').run();
+    const res = await request(app).get('/api/v1/dashboard/summary').expect(200);
+    expect(res.body.data.monthly.income).toBe(0);
+    expect(res.body.data.monthly.expenses).toBe(0);
+    expect(res.body.data.monthly.balance).toBe(0);
+    expect(res.body.data.consolidatedBalance).toBe(1000);
+    expect(res.body.data.expensesByCategory).toHaveLength(0);
   });
 });

@@ -3,6 +3,7 @@ import cors from 'cors';
 import categoryRoutes from './routes/category.routes.js';
 import accountRoutes from './routes/account.routes.js';
 import movementRoutes from './routes/movement.routes.js';
+import dashboardRoutes from './routes/dashboard.routes.js';
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -24,6 +25,7 @@ app.get('/api/v1/health', (req, res) => {
 app.use('/api/v1/categories', categoryRoutes);
 app.use('/api/v1/accounts', accountRoutes);
 app.use('/api/v1/movements', movementRoutes);
+app.use('/api/v1/dashboard', dashboardRoutes);
 
 app.use((err, req, res, next) => {
   console.error(err);

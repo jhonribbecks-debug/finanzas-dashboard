@@ -14,3 +14,7 @@ export const formatDate = (date) => {
 export const formatDateISO = (date) => {
   return dayjs(date).format('YYYY-MM-DD');
 };
+
+export const formatMonth = (month) => {
+  return dayjs(`${month}-01`).format('MMM YYYY');
+};
