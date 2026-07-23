@@ -40,8 +40,9 @@ describe('Integration: Categories API', () => {
   beforeEach(() => {
     db = createTestDb();
     app = createApp(db);
-    catId = db.prepare('INSERT INTO categories (id, name, kind, color, icon) VALUES (?, ?, ?, ?, ?)')
-      .run(uuidv4(), 'Food', 'gasto', '#ff0000', '🍔').lastInsertRowid;
+    catId = uuidv4();
+    db.prepare('INSERT INTO categories (id, name, kind, color, icon) VALUES (?, ?, ?, ?, ?)')
+      .run(catId, 'Food', 'gasto', '#ff0000', '🍔');
   });
 
   afterEach(() => db.close());
@@ -88,8 +89,9 @@ describe('Integration: Categories API', () => {
   });
 
   it('DELETE /categories/:id rejects when has movements', async () => {
-    const accId = db.prepare('INSERT INTO accounts (id, name, type, initial_balance) VALUES (?, ?, ?, ?)')
-      .run(uuidv4(), 'Cash', 'efectivo', 1000).lastInsertRowid;
+    const accId = uuidv4();
+    db.prepare('INSERT INTO accounts (id, name, type, initial_balance) VALUES (?, ?, ?, ?)')
+      .run(accId, 'Cash', 'efectivo', 1000);
     db.prepare('INSERT INTO movements (id, kind, amount, date, category_id, account_id) VALUES (?, ?, ?, ?, ?, ?)')
       .run(uuidv4(), 'gasto', 50, '2024-01-01', catId, accId);
 
@@ -97,10 +99,12 @@ describe('Integration: Categories API', () => {
   });
 
   it('DELETE /categories/:id?reassignTo= reassigns movements', async () => {
-    const accId = db.prepare('INSERT INTO accounts (id, name, type, initial_balance) VALUES (?, ?, ?, ?)')
-      .run(uuidv4(), 'Cash', 'efectivo', 1000).lastInsertRowid;
-    const newCatId = db.prepare('INSERT INTO categories (id, name, kind) VALUES (?, ?, ?)')
-      .run(uuidv4(), 'Other', 'gasto').lastInsertRowid;
+    const accId = uuidv4();
+    db.prepare('INSERT INTO accounts (id, name, type, initial_balance) VALUES (?, ?, ?, ?)')
+      .run(accId, 'Cash', 'efectivo', 1000);
+    const newCatId = uuidv4();
+    db.prepare('INSERT INTO categories (id, name, kind) VALUES (?, ?, ?)')
+      .run(newCatId, 'Other', 'gasto');
     db.prepare('INSERT INTO movements (id, kind, amount, date, category_id, account_id) VALUES (?, ?, ?, ?, ?, ?)')
       .run(uuidv4(), 'gasto', 50, '2024-01-01', catId, accId);
 
@@ -115,10 +119,11 @@ describe('Integration: Accounts API', () => {
 
   beforeEach(() => {
     db = createTestDb();
-    app = createApp(db);
-    accId = db.prepare('INSERT INTO accounts (id, name, type, initial_balance) VALUES (?, ?, ?, ?)')
-      .run(uuidv4(), 'Cash', 'efectivo', 1000).lastInsertRowid;
-  });
+     app = createApp(db);
+     accId = uuidv4();
+     db.prepare('INSERT INTO accounts (id, name, type, initial_balance) VALUES (?, ?, ?, ?)')
+       .run(accId, 'Cash', 'efectivo', 1000);
+   });
 
   afterEach(() => db.close());
 
@@ -163,8 +168,9 @@ describe('Integration: Accounts API', () => {
   });
 
   it('DELETE /accounts/:id rejects when has movements', async () => {
-    const catId = db.prepare('INSERT INTO categories (id, name, kind) VALUES (?, ?, ?)')
-      .run(uuidv4(), 'Food', 'gasto').lastInsertRowid;
+    const catId = uuidv4();
+    db.prepare('INSERT INTO categories (id, name, kind) VALUES (?, ?, ?)')
+      .run(catId, 'Food', 'gasto');
     db.prepare('INSERT INTO movements (id, kind, amount, date, category_id, account_id) VALUES (?, ?, ?, ?, ?, ?)')
       .run(uuidv4(), 'gasto', 50, '2024-01-01', catId, accId);
 
@@ -178,10 +184,12 @@ describe('Integration: Movements API', () => {
   beforeEach(() => {
     db = createTestDb();
     app = createApp(db);
-    catId = db.prepare('INSERT INTO categories (id, name, kind) VALUES (?, ?, ?)')
-      .run(uuidv4(), 'Food', 'gasto').lastInsertRowid;
-    accId = db.prepare('INSERT INTO accounts (id, name, type, initial_balance) VALUES (?, ?, ?, ?)')
-      .run(uuidv4(), 'Cash', 'efectivo', 1000).lastInsertRowid;
+    catId = uuidv4();
+    db.prepare('INSERT INTO categories (id, name, kind) VALUES (?, ?, ?)')
+      .run(catId, 'Food', 'gasto');
+    accId = uuidv4();
+    db.prepare('INSERT INTO accounts (id, name, type, initial_balance) VALUES (?, ?, ?, ?)')
+      .run(accId, 'Cash', 'efectivo', 1000);
     db.prepare('INSERT INTO movements (id, kind, amount, date, description, category_id, account_id) VALUES (?, ?, ?, ?, ?, ?, ?)')
       .run(uuidv4(), 'gasto', 50, '2024-01-15', 'Lunch', catId, accId);
   });

@@ -29,16 +29,19 @@ class AccountRepository {
 
   create(data) {
     const { id, name, type, initial_balance } = data;
-    return this.db.prepare(
+    this.db.prepare(
       'INSERT INTO accounts (id, name, type, initial_balance) VALUES (?, ?, ?, ?)'
     ).run(id, name, type, initial_balance);
+    return { id, name, type, initial_balance, balance: initial_balance };
   }
 
   update(id, data) {
-    const { name, type, initial_balance } = data;
-    return this.db.prepare(
+    const existing = this.db.prepare('SELECT * FROM accounts WHERE id = ?').get(id);
+    const { name = existing.name, type = existing.type, initial_balance = existing.initial_balance } = data;
+    this.db.prepare(
       'UPDATE accounts SET name = ?, type = ?, initial_balance = ? WHERE id = ?'
     ).run(name, type, initial_balance, id);
+    return { id, name, type, initial_balance, balance: initial_balance };
   }
 
   delete(id) {

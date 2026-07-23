@@ -48,13 +48,13 @@ class MovementService {
   }
 
   validateForeignKeys(categoryId, accountId) {
-    if (!categoryRepository.exists(categoryId)) {
+    if (categoryId !== undefined && !categoryRepository.exists(categoryId)) {
       const err = new Error('La categoría especificada no existe');
       err.statusCode = 400;
       err.code = 'VALIDATION_ERROR';
       throw err;
     }
-    if (!accountRepository.exists(accountId)) {
+    if (accountId !== undefined && !accountRepository.exists(accountId)) {
       const err = new Error('La cuenta especificada no existe');
       err.statusCode = 400;
       err.code = 'VALIDATION_ERROR';

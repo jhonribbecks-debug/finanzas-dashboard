@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import categoryService from '../../src/services/category.service.js';
 
-const mockRepo = {
+const mockRepo = vi.hoisted(() => ({
   getAll: vi.fn(),
   getById: vi.fn(),
   create: vi.fn(),
@@ -11,7 +11,7 @@ const mockRepo = {
   hasMovements: vi.fn(),
   reassignMovements: vi.fn(),
   exists: vi.fn(),
-};
+}));
 
 vi.mock('../../src/repositories/category.repository.js', () => ({
   default: mockRepo,

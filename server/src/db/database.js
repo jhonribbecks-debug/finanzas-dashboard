@@ -8,7 +8,7 @@ const __dirname = dirname(__filename);
 
 const DB_PATH = process.env.DB_PATH || join(__dirname, '../../data/finanzas.db');
 
-if (process.env.NODE_ENV !== 'test' && !fs.existsSync(join(__dirname, '../../data'))) {
+if (!fs.existsSync(join(__dirname, '../../data'))) {
   fs.mkdirSync(join(__dirname, '../../data'), { recursive: true });
 }
 

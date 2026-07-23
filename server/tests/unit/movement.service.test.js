@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import movementService from '../../src/services/movement.service.js';
 
-const mockRepo = {
+const mockRepo = vi.hoisted(() => ({ 
   getAll: vi.fn(),
   count: vi.fn(),
   getById: vi.fn(),
@@ -9,9 +9,9 @@ const mockRepo = {
   update: vi.fn(),
   delete: vi.fn(),
   exists: vi.fn(),
-};
-const mockCatRepo = { exists: vi.fn() };
-const mockAccRepo = { exists: vi.fn() };
+}));
+const mockCatRepo = vi.hoisted(() => ({ exists: vi.fn() }));
+const mockAccRepo = vi.hoisted(() => ({ exists: vi.fn() }));
 
 vi.mock('../../src/repositories/movement.repository.js', () => ({
   default: mockRepo,

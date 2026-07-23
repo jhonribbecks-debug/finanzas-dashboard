@@ -12,12 +12,12 @@ class MovementRepository {
     const conditions = [];
     const params = [];
 
-    if (from) { conditions.push('date >= ?'); params.push(from); }
-    if (to) { conditions.push('date <= ?'); params.push(to); }
-    if (categoryId) { conditions.push('category_id = ?'); params.push(categoryId); }
-    if (accountId) { conditions.push('account_id = ?'); params.push(accountId); }
-    if (kind) { conditions.push('kind = ?'); params.push(kind); }
-    if (q) { conditions.push('description LIKE ?'); params.push(`%${q}%`); }
+    if (from) { conditions.push('m.date >= ?'); params.push(from); }
+    if (to) { conditions.push('m.date <= ?'); params.push(to); }
+    if (categoryId) { conditions.push('m.category_id = ?'); params.push(categoryId); }
+    if (accountId) { conditions.push('m.account_id = ?'); params.push(accountId); }
+    if (kind) { conditions.push('m.kind = ?'); params.push(kind); }
+    if (q) { conditions.push('m.description LIKE ?'); params.push(`%${q}%`); }
 
     const whereClause = conditions.length > 0 ? `WHERE ${conditions.join(' AND ')}` : '';
     const offset = (page - 1) * limit;
@@ -67,16 +67,19 @@ class MovementRepository {
 
   create(data) {
     const { id, kind, amount, date, description, category_id, account_id } = data;
-    return this.db.prepare(
+    this.db.prepare(
       'INSERT INTO movements (id, kind, amount, date, description, category_id, account_id) VALUES (?, ?, ?, ?, ?, ?, ?)'
     ).run(id, kind, amount, date, description, category_id, account_id);
+    return { id, kind, amount, date, description, category_id, account_id };
   }
 
   update(id, data) {
-    const { kind, amount, date, description, category_id, account_id } = data;
-    return this.db.prepare(
+    const existing = this.db.prepare('SELECT * FROM movements WHERE id = ?').get(id);
+    const { kind = existing.kind, amount = existing.amount, date = existing.date, description = existing.description, category_id = existing.category_id, account_id = existing.account_id } = data;
+    this.db.prepare(
       'UPDATE movements SET kind = ?, amount = ?, date = ?, description = ?, category_id = ?, account_id = ? WHERE id = ?'
     ).run(kind, amount, date, description, category_id, account_id, id);
+    return { id, kind, amount, date, description, category_id, account_id };
   }
 
   delete(id) {

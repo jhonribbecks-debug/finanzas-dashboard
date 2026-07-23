@@ -1,24 +1,21 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import accountService from '../../src/services/account.service.js';
 
-const mockRepo = {
-  getAll: vi.fn(),
-  getById: vi.fn(),
-  create: vi.fn(),
-  update: vi.fn(),
-  delete: vi.fn(),
-  hasName: vi.fn(),
-  hasMovements: vi.fn(),
-  exists: vi.fn(),
-};
-
-vi.mock('../../src/repositories/account.repository.js', () => ({
-  default: mockRepo,
-}));
-
 describe('AccountService', () => {
+  const mockRepo = vi.hoisted(() => ({
+    getAll: vi.fn(),
+    getById: vi.fn(),
+    create: vi.fn(),
+    update: vi.fn(),
+    delete: vi.fn(),
+    hasName: vi.fn(),
+    hasMovements: vi.fn(),
+    exists: vi.fn(),
+  }));
+
   beforeEach(() => {
     vi.clearAllMocks();
+    accountService.repository = mockRepo;
   });
 
   describe('getAll', () => {

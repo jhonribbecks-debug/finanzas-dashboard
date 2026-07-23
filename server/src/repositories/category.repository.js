@@ -15,16 +15,18 @@ class CategoryRepository {
 
   create(data) {
     const { id, name, kind, color, icon } = data;
-    return this.db.prepare(
+    this.db.prepare(
       'INSERT INTO categories (id, name, kind, color, icon) VALUES (?, ?, ?, ?, ?)'
     ).run(id, name, kind, color, icon);
+    return { id, name, kind, color, icon };
   }
 
   update(id, data) {
     const { name, kind, color, icon } = data;
-    return this.db.prepare(
+    this.db.prepare(
       'UPDATE categories SET name = ?, kind = ?, color = ?, icon = ? WHERE id = ?'
     ).run(name, kind, color, icon, id);
+    return { id, name, kind, color, icon };
   }
 
   delete(id) {

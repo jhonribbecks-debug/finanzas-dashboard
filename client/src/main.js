@@ -1,3 +1,5 @@
+import 'toastify-js/src/toastify.css';
+import 'sweetalert2/dist/sweetalert2.min.css';
 import { DashboardPage } from './pages/dashboard.js';
 import { MovementsPage } from './pages/movements.js';
 import { CategoriesPage } from './pages/categories.js';
