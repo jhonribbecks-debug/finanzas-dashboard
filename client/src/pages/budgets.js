@@ -56,7 +56,9 @@ function renderTable() {
   if (!container) return;
 
   if (!budgets || budgets.length === 0) {
-    container.innerHTML = '<tr><td colspan="6" style="text-align:center;">No hay presupuestos para este mes</td></tr>';
+    container.innerHTML = `<tr><td colspan="6" class="empty-state"><div class="empty-message">No hay presupuestos para este mes</div><button class="btn btn-primary" id="empty-add-btn">Nuevo presupuesto</button></td></tr>`;
+    const addBtn = document.getElementById('empty-add-btn');
+    if (addBtn) addBtn.addEventListener('click', addBudget);
     return;
   }
 

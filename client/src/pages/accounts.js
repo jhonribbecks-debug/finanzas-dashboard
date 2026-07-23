@@ -34,6 +34,13 @@ function renderTable() {
   const container = document.getElementById('accounts-table-body');
   if (!container) return;
 
+  if (!accounts || accounts.length === 0) {
+    container.innerHTML = `<tr><td colspan="5" class="empty-state"><div class="empty-message">Aun no has creado cuentas</div><button class="btn btn-primary" id="empty-add-btn">Nueva cuenta</button></td></tr>`;
+    const addBtn = document.getElementById('empty-add-btn');
+    if (addBtn) addBtn.addEventListener('click', addAccount);
+    return;
+  }
+
   container.innerHTML = accounts
     .map((a) => {
       return `

@@ -335,6 +335,18 @@ main {
     }
 }
 
+/* Empty states */
+.empty-state {
+    text-align: center;
+    padding: 2rem 1rem;
+}
+
+.empty-message {
+    font-size: 1rem;
+    color: #6b7280;
+    margin-bottom: 1rem;
+}
+
 /* Budgets page */
 .budgets-page {
     display: flex;

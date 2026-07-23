@@ -101,6 +101,18 @@ function renderTable() {
   const container = document.getElementById('movements-table-body');
   if (!container) return;
 
+  if (!items || items.length === 0) {
+    const filters = store.get('filters') || {};
+    const hasFilters = Object.values(filters).some((v) => v);
+    const message = hasFilters
+      ? 'No se encontraron movimientos con esos filtros'
+      : 'No hay movimientos registrados';
+    container.innerHTML = `<tr><td colspan="7" class="empty-state"><div class="empty-message">${message}</div><button class="btn btn-primary" id="empty-add-btn">Nuevo movimiento</button></td></tr>`;
+    const addBtn = document.getElementById('empty-add-btn');
+    if (addBtn) addBtn.addEventListener('click', addMovement);
+    return;
+  }
+
   container.innerHTML = items
     .map((m) => {
       const sign = m.kind === 'gasto' ? '-' : '+';

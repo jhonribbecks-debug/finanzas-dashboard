@@ -33,6 +33,13 @@ function renderTable() {
   const container = document.getElementById('categories-table-body');
   if (!container) return;
 
+  if (!categories || categories.length === 0) {
+    container.innerHTML = `<tr><td colspan="5" class="empty-state"><div class="empty-message">Aun no has creado categorias</div><button class="btn btn-primary" id="empty-add-btn">Nueva categoría</button></td></tr>`;
+    const addBtn = document.getElementById('empty-add-btn');
+    if (addBtn) addBtn.addEventListener('click', addCategory);
+    return;
+  }
+
   container.innerHTML = categories
     .map((c) => {
       const color = c.color || '#ccc';
