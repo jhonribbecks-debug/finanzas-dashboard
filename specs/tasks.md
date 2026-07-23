@@ -13,13 +13,13 @@
 - [ ] T-06 CRUD **cuentas** con saldo calculado en SQL. Misma regla de eliminación.
 - [ ] T-07 CRUD **movimientos** con validación completa (monto > 0, fecha ISO, FKs existentes).
 - [ ] T-08 Endpoint `GET /movements` con filtros combinables y paginación en servidor.
-- [ ] T-09 Pruebas unitarias de services (Vitest) + integración de endpoints (Supertest, BD `:memory:`).
+- [x] T-09 Pruebas unitarias de services (Vitest) + integración de endpoints (Supertest, BD `:memory:`).
 
 ## Fase 2 — Frontend CRUD
-- [ ] T-10 Wrapper `http.js` y módulo `store.js` de estado/eventos.
-- [ ] T-11 Página **Movimientos**: tabla paginada, formulario modal (SweetAlert2), notificaciones (Toastify).
-- [ ] T-12 Barra de **filtros** combinables conectada a la tabla.
-- [ ] T-13 Páginas **Categorías** y **Cuentas** (CRUD completo, flujo de reasignación).
+- [x] T-10 Wrapper `http.js` y módulo `store.js` de estado/eventos.
+- [x] T-11 Página **Movimientos**: tabla paginada, formulario modal (SweetAlert2), notificaciones (Toastify).
+- [x] T-12 Barra de **filtros** combinables conectada a la tabla.
+- [x] T-13 Páginas **Categorías** y **Cuentas** (CRUD completo, flujo de reasignación).
 
 ## Fase 3 — Dashboard y presupuesto
 - [ ] T-14 Endpoints de agregación: `summary`, `by-category`, `timeline` (SQL con GROUP BY).
