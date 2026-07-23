@@ -6,13 +6,13 @@
 - [x] T-01 Inicializar monorepo con workspaces (`client`, `server`), Git, ESLint, `.gitignore`.
 - [x] T-02 Crear proyecto Vite en `client/` con página base y router por hash.
 - [x] T-03 Bootstrap Express en `server/` con middleware de errores y respuesta uniforme.
-- [ ] T-04 Conexión SQLite (`better-sqlite3`), `PRAGMA foreign_keys=ON`, script de migración con las 4 tablas, seed de categorías.
+- [x] T-04 Conexión SQLite (`better-sqlite3`), `PRAGMA foreign_keys=ON`, script de migración con las 4 tablas, seed de categorías.
 
 ## Fase 1 — Núcleo de datos
-- [ ] T-05 CRUD **categorías**: repository → service → controller → rutas + validación. Regla de eliminación con reasignación.
-- [ ] T-06 CRUD **cuentas** con saldo calculado en SQL. Misma regla de eliminación.
-- [ ] T-07 CRUD **movimientos** con validación completa (monto > 0, fecha ISO, FKs existentes).
-- [ ] T-08 Endpoint `GET /movements` con filtros combinables y paginación en servidor.
+- [x] T-05 CRUD **categorías**: repository → service → controller → rutas + validación. Regla de eliminación con reasignación.
+- [x] T-06 CRUD **cuentas** con saldo calculado en SQL. Misma regla de eliminación.
+- [x] T-07 CRUD **movimientos** con validación completa (monto > 0, fecha ISO, FKs existentes).
+- [x] T-08 Endpoint `GET /movements` con filtros combinables y paginación en servidor.
 - [x] T-09 Pruebas unitarias de services (Vitest) + integración de endpoints (Supertest, BD `:memory:`).
 
 ## Fase 2 — Frontend CRUD
@@ -22,13 +22,13 @@
 - [x] T-13 Páginas **Categorías** y **Cuentas** (CRUD completo, flujo de reasignación).
 
 ## Fase 3 — Dashboard y presupuesto
-- [ ] T-14 Endpoints de agregación: `summary`, `by-category`, `timeline` (SQL con GROUP BY).
-- [ ] T-15 Página **Dashboard**: tarjetas de indicadores + 3 gráficos Chart.js + selector de mes.
-- [ ] T-16 CRUD de **presupuesto** (global y por categoría) + barra de progreso + alertas 80 %/100 %.
-- [ ] T-17 Pruebas de los endpoints de agregación y reglas de presupuesto.
+- [x] T-14 Endpoints de agregación: `summary`, `by-category`, `timeline` (SQL con GROUP BY).
+- [x] T-15 Página **Dashboard**: tarjetas de indicadores + 3 gráficos Chart.js + selector de mes.
+- [x] T-16 CRUD de **presupuesto** (global y por categoría) + barra de progreso + alertas 80 %/100 %.
+- [x] T-17 Pruebas de los endpoints de agregación y reglas de presupuesto.
 
 ## Fase 4 — Exportación y cierre
-- [ ] T-18 Exportar historial filtrado a **Excel** (SheetJS) con totales.
-- [ ] T-19 Exportar a **PDF** (jsPDF) con encabezado, período y totales.
-- [ ] T-20 Estados vacíos, manejo de errores en UI, responsividad móvil.
-- [ ] T-21 README con instrucciones de instalación/ejecución + revisión final de cobertura ≥ 70 %.
+- [x] T-18 Exportar historial filtrado a **Excel** (SheetJS) con totales.
+- [x] T-19 Exportar a **PDF** (jsPDF) con encabezado, período y totales.
+- [x] T-20 Estados vacíos, manejo de errores en UI, responsividad móvil.
+- [x] T-21 README con instrucciones de instalación/ejecución + revisión final de cobertura ≥ 70 %.
